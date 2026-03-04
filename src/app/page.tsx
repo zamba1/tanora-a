@@ -1,5 +1,6 @@
 'use client';
 
+import dynamic from 'next/dynamic';
 import { useState, useEffect, useCallback } from 'react';
 import { m, useScroll, useMotionValueEvent } from 'framer-motion';
 
@@ -38,6 +39,27 @@ import {
 
 import { varFade, varZoom } from 'src/components/animate/variants';
 import { MotionContainer } from 'src/components/animate/motion-container';
+
+// Leaflet – chargé côté client uniquement
+const LeafletMap = dynamic(
+  () =>
+    import('react-leaflet').then((mod) => {
+      // Fix Leaflet default marker icon issue in Next.js / Webpack
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
+      const L = require('leaflet');
+      delete (L.Icon.Default.prototype as any)._getIconUrl;
+      L.Icon.Default.mergeOptions({
+        iconRetinaUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png',
+        iconUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png',
+        shadowUrl: 'https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png',
+      });
+      return mod.MapContainer;
+    }),
+  { ssr: false }
+);
+const TileLayer = dynamic(() => import('react-leaflet').then((mod) => mod.TileLayer), { ssr: false });
+const LeafletMarker = dynamic(() => import('react-leaflet').then((mod) => mod.Marker), { ssr: false });
+const Popup = dynamic(() => import('react-leaflet').then((mod) => mod.Popup), { ssr: false });
 
 // ======================================================================
 // DATA
@@ -884,8 +906,8 @@ export default function HomePage() {
                         }}
                       >
                   <CardContent sx={{ p: 3.5 }}>
-                    <Box
-                      sx={{
+                        <Box
+                          sx={{
                         width: 60,
                         height: 60,
                             borderRadius: 2,
@@ -1342,6 +1364,46 @@ export default function HomePage() {
               </Card>
             </Grid>
           </Grid>
+
+          {/* Map Leaflet */}
+          <Box
+            component={m.div}
+            variants={varFade('inUp', { distance: 40 })}
+            sx={{
+              mt: 6,
+              borderRadius: 4,
+              overflow: 'hidden',
+              border: `1px solid ${alpha(theme.palette.primary.main, 0.08)}`,
+              boxShadow: `0 8px 30px ${alpha(theme.palette.grey[900], 0.06)}`,
+              height: { xs: 300, md: 400 },
+              position: 'relative',
+              '.leaflet-container': {
+                height: '100%',
+                width: '100%',
+              },
+            }}
+          >
+            <LeafletMap
+              center={[-18.908991, 47.525487]}
+              zoom={20}
+              scrollWheelZoom={false}
+              style={{ height: '100%', width: '100%' }}
+            >
+              <TileLayer
+                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              />
+              <LeafletMarker position={[-18.908991, 47.525487]}>
+                <Popup>
+                  <strong>Tanora A LLB</strong>
+                  <br />
+                  Ligue pour la Lecture de la Bible
+                  <br />
+                  Antananarivo, Madagascar
+                </Popup>
+              </LeafletMarker>
+            </LeafletMap>
+          </Box>
         </Container>
       </Box>
 
@@ -1360,26 +1422,25 @@ export default function HomePage() {
               <Stack direction="row" alignItems="center" spacing={2} sx={{ mb: { xs: 2, md: 0 } }}>
                 <Box
                   component="img"
-                  src="/logo/logo-ligue.svg"
+                  src="/logo/logo.png"
                   alt="Ligue pour la Lecture de la Bible"
-                  sx={{ height: 48, width: 'auto', filter: 'brightness(0) invert(1)', opacity: 0.9 }}
+                  sx={{ height: 48, width: 'auto',}}
                 />
                 <Box>
                   <Typography variant="subtitle1" sx={{ fontWeight: 700, color: '#fff', lineHeight: 1.3 }}>
                     Ligue pour la Lecture de la Bible
                   </Typography>
                   <Typography variant="caption" sx={{ color: alpha('#fff', 0.5) }}>
-                    Tanora A — Département Jeunesse
+                    Tanora A — Ministère auprès des jeunes
                   </Typography>
                 </Box>
               </Stack>
             </Grid>
             <Grid size={{ xs: 12, md: 4 }}>
               <Typography variant="body2" sx={{ color: alpha('#fff', 0.6), textAlign: { xs: 'left', md: 'center' } }}>
-                &ldquo;Car je connais les projets que j&apos;ai formés sur vous, dit l&apos;Éternel,
-                projets de paix et non de malheur, afin de vous donner un avenir et de l&apos;espérance.&rdquo;
+                &ldquo;Ta parole est une lampe à mes pieds, et une lumière sur mon sentier&rdquo;
                 <br />
-                <strong style={{ color: '#FFED00' }}>Jérémie 29:11</strong>
+                <strong style={{ color: '#FFED00' }}>Psaumes 119:105</strong>
               </Typography>
             </Grid>
             <Grid size={{ xs: 12, md: 4 }}>
