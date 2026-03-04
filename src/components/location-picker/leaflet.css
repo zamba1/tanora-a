@@ -1,0 +1,31 @@
+/* Import des styles Leaflet */
+@import 'leaflet/dist/leaflet.css';
+
+/* Styles personnalisés pour la carte */
+.leaflet-container {
+  font-family: inherit;
+}
+
+.leaflet-popup-content-wrapper {
+  border-radius: 8px;
+}
+
+.leaflet-popup-content {
+  margin: 8px 12px;
+  line-height: 1.4;
+}
+
+.leaflet-popup-tip {
+  background: white;
+  border: 1px solid #ccc;
+}
+
+/* Amélioration de l'apparence des marqueurs */
+.leaflet-marker-icon {
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+}
+
+/* Style pour le marqueur de position utilisateur */
+.leaflet-marker-icon.user-location {
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3)) hue-rotate(200deg);
+}
