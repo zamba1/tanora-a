@@ -10,6 +10,7 @@ import { primary } from 'src/theme/core/palette';
 import { themeConfig, ThemeProvider } from 'src/theme';
 
 import { ProgressBar } from 'src/components/progress-bar';
+import { GoogleFonts } from 'src/components/google-fonts';
 import { MotionLazy } from 'src/components/animate/motion-lazy';
 import { detectSettings } from 'src/components/settings/server';
 import { SettingsDrawer, defaultSettings, SettingsProvider } from 'src/components/settings';
@@ -130,6 +131,7 @@ export default async function RootLayout({ children }: RootLayoutProps) {
                 defaultMode={themeConfig.defaultMode}
               >
                 <MotionLazy>
+                  <GoogleFonts />
                   <ProgressBar />
                   <SettingsDrawer defaultSettings={defaultSettings} />
                   {children}

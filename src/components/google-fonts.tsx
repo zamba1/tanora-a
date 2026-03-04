@@ -16,10 +16,10 @@ export function GoogleFonts() {
     preconnect2.crossOrigin = 'anonymous';
     document.head.appendChild(preconnect2);
 
-    // Lien vers la police Fleur De Leah
+    // Lien vers les polices
     const fontLink = document.createElement('link');
     fontLink.href =
-      'https://fonts.googleapis.com/css2?family=Fleur+De+Leah&display=swap';
+      'https://fonts.googleapis.com/css2?family=Fleur+De+Leah&family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&display=swap';
     fontLink.rel = 'stylesheet';
     document.head.appendChild(fontLink);
 

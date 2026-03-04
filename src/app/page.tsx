@@ -12,28 +12,27 @@ import Button from '@mui/material/Button';
 import Container from '@mui/material/Container';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
-import CardContent from '@mui/material/CardContent';
 import IconButton from '@mui/material/IconButton';
+import CardContent from '@mui/material/CardContent';
 import { alpha, useTheme } from '@mui/material/styles';
 import {
-  Church,
-  Groups,
-  MenuBook,
-  Campaign,
-  SportsBasketball,
-  SportsSoccer,
-  Hiking,
   Email,
   Phone,
   Place,
-  Facebook,
+  Church,
+  Groups,
+  Hiking,
   YouTube,
-  Favorite,
+  MenuBook,
+  Campaign,
+  Facebook,
+  Diversity3,
   AutoAwesome,
   EmojiEvents,
-  Diversity3,
-  VolunteerActivism,
   Brightness7,
+  SportsSoccer,
+  SportsBasketball,
+  VolunteerActivism,
   CollectionsOutlined,
 } from '@mui/icons-material';
 
@@ -140,14 +139,14 @@ const CAMPS_DATA = [
 ];
 
 const GALLERY_IMAGES = [
-  { src: 'https://images.unsplash.com/photo-1523803326055-9729b9e02e5a?w=600&h=400&fit=crop', alt: 'Louange et adoration' },
-  { src: 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?w=600&h=400&fit=crop', alt: 'Communion fraternelle' },
-  { src: 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=600&h=400&fit=crop', alt: 'Football entre jeunes' },
-  { src: 'https://images.unsplash.com/photo-1546519638-68e109498ffc?w=600&h=400&fit=crop', alt: 'Basketball' },
-  { src: 'https://images.unsplash.com/photo-1504052434569-70ad5836ab65?w=600&h=400&fit=crop', alt: 'Étude biblique' },
-  { src: 'https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?w=600&h=400&fit=crop', alt: 'Camp de jeunes' },
-  { src: 'https://images.unsplash.com/photo-1511632765486-a01980e01a18?w=600&h=400&fit=crop', alt: 'Groupe de jeunes' },
-  { src: 'https://images.unsplash.com/photo-1470071459604-3b5ec3a7fe05?w=600&h=400&fit=crop', alt: 'Nature - retraite' },
+  { src: '/assets/images/home/hero.jpeg', alt: 'Louange et adoration' },
+  { src: '/assets/images/home/hero2.jpeg', alt: 'Communion fraternelle' },
+  { src: '/assets/images/home/hero3.jpeg', alt: 'Football entre jeunes' },
+  { src: '/assets/images/home/hero4.jpeg', alt: 'Basketball' },
+  { src: '/assets/images/home/hero5.jpg', alt: 'Étude biblique' },
+  { src: '/assets/images/home/hero6.jpg', alt: 'Camp de jeunes' },
+  { src: '/assets/images/home/hero7.jpg', alt: 'Groupe de jeunes' },
+  { src: '/assets/images/home/hero8.jpeg', alt: 'Nature - retraite' },
 ];
 
 // ======================================================================
@@ -216,7 +215,7 @@ function FloatingNavbar() {
           gap: { xs: 1, md: 2 },
         }}
       >
-        {/* Logo texte */}
+        {/* Logo */}
         <Box
           sx={{
             display: 'flex',
@@ -227,20 +226,22 @@ function FloatingNavbar() {
           }}
           onClick={() => handleNavClick('accueil')}
         >
-          <Church sx={{ fontSize: 32, color: theme.palette.primary.main, mr: 1 }} />
-          <Typography
+          <Box
+            component="img"
+            src="/logo/logotanA.png"
+            alt="Tanora A LLB"
+            sx={{ height: 40, width: 'auto', mr: 1 }}
+          />
+          {/* <Typography
             variant="h6"
             sx={{
               fontWeight: 800,
-              background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
-              backgroundClip: 'text',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
+              color: theme.palette.primary.main,
               display: { xs: 'none', sm: 'block' },
             }}
           >
             Tanora A
-          </Typography>
+          </Typography> */}
         </Box>
 
         {/* Desktop nav */}
@@ -347,9 +348,10 @@ export default function HomePage() {
         sx={{
           minHeight: '100vh',
           background: `
-            radial-gradient(circle at 20% 20%, ${alpha(theme.palette.primary.main, 0.15)} 0%, transparent 50%),
-            radial-gradient(circle at 80% 80%, ${alpha(theme.palette.secondary.main, 0.12)} 0%, transparent 50%),
-            linear-gradient(160deg, ${alpha(theme.palette.primary.darker, 0.95)} 0%, ${theme.palette.primary.main} 50%, ${alpha(theme.palette.primary.dark, 0.9)} 100%)
+            radial-gradient(ellipse at 20% 0%, ${alpha(theme.palette.secondary.main, 0.12)} 0%, transparent 50%),
+            radial-gradient(ellipse at 80% 100%, ${alpha(theme.palette.secondary.main, 0.06)} 0%, transparent 50%),
+            radial-gradient(ellipse at 60% 50%, ${alpha(theme.palette.primary.main, 0.03)} 0%, transparent 60%),
+            #FAFAFA
           `,
           position: 'relative',
           overflow: 'hidden',
@@ -359,37 +361,27 @@ export default function HomePage() {
           pb: { xs: 8, md: 0 },
         }}
       >
-        {/* Decorative cross pattern */}
+        {/* Decorative diagonal yellow stripe (inspired by logo) */}
         <Box
           sx={{
             position: 'absolute',
-            top: '10%',
-            right: '5%',
-            width: 200,
-            height: 200,
-            opacity: 0.06,
-            '&::before': {
-              content: '"✝"',
-              fontSize: 200,
-              color: '#fff',
-              position: 'absolute',
-            },
+            top: 0,
+            right: '-5%',
+            width: '45%',
+            height: '100%',
+            background: `linear-gradient(135deg, transparent 25%, ${alpha(theme.palette.secondary.main, 0.07)} 50%, transparent 75%)`,
+            transform: 'skewX(-12deg)',
           }}
         />
+        {/* Subtle bottom border accent */}
         <Box
           sx={{
             position: 'absolute',
-            bottom: '15%',
-            left: '3%',
-            width: 120,
-            height: 120,
-            opacity: 0.04,
-            '&::before': {
-              content: '"✝"',
-              fontSize: 120,
-              color: '#fff',
-              position: 'absolute',
-            },
+            bottom: 0,
+            left: 0,
+            right: 0,
+            height: 4,
+            background: `linear-gradient(90deg, ${theme.palette.secondary.main}, ${alpha(theme.palette.secondary.main, 0.3)}, transparent)`,
           }}
         />
 
@@ -401,18 +393,7 @@ export default function HomePage() {
             spacing={{ xs: 4, md: 8 }}
             alignItems="center"
           >
-            <Grid size={{ xs: 12, md: 7 }}>
-              <Chip
-                label="Département Jeunesse • LLB"
-                sx={{
-                  mb: 2.5,
-                  borderRadius: 999,
-                  fontWeight: 600,
-                  backgroundColor: alpha(theme.palette.secondary.main, 0.2),
-                  color: theme.palette.secondary.light,
-                  border: `1px solid ${alpha(theme.palette.secondary.main, 0.3)}`,
-                }}
-              />
+            <Grid size={{ xs: 12, md: 6 }}>
 
               <Typography
                 component={m.h1}
@@ -422,23 +403,25 @@ export default function HomePage() {
                   fontWeight: 900,
                   lineHeight: 1.05,
                   mb: 3,
-                  color: '#fff',
+                  color: theme.palette.primary.main,
                   fontSize: { xs: '2.5rem', sm: '3.2rem', md: '4rem' },
                 }}
               >
-                Tanora A
+                Tanora <span style={{ color: theme.palette.secondary.main, backgroundColor: alpha(theme.palette.primary.main, 1), padding: '0px 15px 7px', borderRadius: '20px' }}>A</span>
                 <Box
                   component="span"
                   sx={{
                     display: 'block',
-                    mt: 0.5,
-                    background: `linear-gradient(135deg, ${theme.palette.secondary.light}, ${theme.palette.secondary.main})`,
-                    backgroundClip: 'text',
-                    WebkitBackgroundClip: 'text',
-                    WebkitTextFillColor: 'transparent',
+                    mt: 1,
+                    fontFamily: '"Playfair Display", serif',
+                    fontStyle: 'italic',
+                    fontWeight: 600,
+                    fontSize: { xs: '1.3rem', sm: '1.6rem', md: '4rem' },
+                    color: theme.palette.text.secondary,
+                    letterSpacing: '0.01em',
                   }}
                 >
-                  LLB
+                  Ligue pour la Lecture de la Bible
                 </Box>
               </Typography>
 
@@ -447,7 +430,7 @@ export default function HomePage() {
                 variants={varFade('inUp', { distance: 40 })}
                 variant="h5"
                 sx={{
-                  color: alpha('#fff', 0.85),
+                  color: theme.palette.text.secondary,
                   maxWidth: 560,
                   mb: 4,
                   fontWeight: 400,
@@ -455,9 +438,8 @@ export default function HomePage() {
                   fontSize: { xs: '1.05rem', md: '1.2rem' },
                 }}
               >
-                Le département jeunesse de la Ligue pour la Lecture de la Bible.
-                Ensemble, nous grandissons dans la foi, partageons l&apos;Évangile et vivons
-                des moments inoubliables au service du Christ.
+                Tanora A – Département de la Ligue pour la Lecture de la Bible.
+                Grandir dans la foi, partager l&apos;Évangile et vivre l&apos;Évangile ensemble.
               </Typography>
 
               <Stack
@@ -476,16 +458,16 @@ export default function HomePage() {
                   sx={{
                     px: 4.5,
                     py: 1.8,
-                    fontWeight: 700,
+                    fontWeight: 800,
                     borderRadius: 999,
                     fontSize: '1rem',
-                    backgroundColor: theme.palette.secondary.main,
-                    color: theme.palette.primary.darker,
-                    boxShadow: `0 18px 45px ${alpha(theme.palette.secondary.main, 0.4)}`,
+                    backgroundColor: theme.palette.primary.main,
+                    color: '#fff',
+                    boxShadow: `0 18px 45px ${alpha(theme.palette.primary.main, 0.25)}`,
                     '&:hover': {
-                      backgroundColor: theme.palette.secondary.dark,
+                      backgroundColor: theme.palette.primary.dark,
                       transform: 'translateY(-2px)',
-                      boxShadow: `0 24px 60px ${alpha(theme.palette.secondary.main, 0.5)}`,
+                      boxShadow: `0 24px 60px ${alpha(theme.palette.primary.main, 0.35)}`,
                     },
                     transition: 'all 0.25s ease',
                   }}
@@ -506,12 +488,12 @@ export default function HomePage() {
                     borderRadius: 999,
                     borderWidth: 2,
                     fontSize: '0.95rem',
-                    borderColor: alpha('#fff', 0.4),
-                    color: '#fff',
+                    borderColor: theme.palette.primary.main,
+                    color: theme.palette.primary.main,
                     '&:hover': {
                       borderWidth: 2,
-                      borderColor: '#fff',
-                      backgroundColor: alpha('#fff', 0.08),
+                      borderColor: theme.palette.primary.dark,
+                      backgroundColor: alpha(theme.palette.primary.main, 0.05),
                     },
                   }}
                 >
@@ -520,69 +502,113 @@ export default function HomePage() {
               </Stack>
             </Grid>
 
-            {/* Hero right - decorative */}
-            <Grid size={{ xs: 12, md: 5 }} sx={{ display: { xs: 'none', md: 'flex' }, justifyContent: 'center' }}>
+            {/* Hero right - Masonry gallery */}
+            <Grid size={{ xs: 12, md: 6 }}>
               <Box
                 sx={{
-                  position: 'relative',
-                  width: 380,
-                  height: 380,
+                  display: 'flex',
+                  gap: 2,
+                  mx: 'auto',
                 }}
               >
-                {/* Main circle */}
-                <Box
-                  sx={{
-                    width: '100%',
-                    height: '100%',
-                    borderRadius: '50%',
-                    background: `linear-gradient(135deg, ${alpha(theme.palette.secondary.main, 0.2)}, ${alpha(theme.palette.primary.light, 0.15)})`,
-                    border: `2px solid ${alpha('#fff', 0.1)}`,
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    flexDirection: 'column',
-                    gap: 1,
-                  }}
-                >
-                  <Church sx={{ fontSize: 80, color: alpha('#fff', 0.9) }} />
-                  <Typography variant="h4" sx={{ color: '#fff', fontWeight: 800, textAlign: 'center' }}>
-                    Tanora A
-                  </Typography>
-                  <Typography variant="body1" sx={{ color: alpha('#fff', 0.7), fontWeight: 500 }}>
-                    Ligue pour la Lecture de la Bible
-                  </Typography>
-                </Box>
-                {/* Orbiting icons */}
-                {[
-                  { Icon: MenuBook, top: '-5%', left: '50%', delay: '0s' },
-                  { Icon: Favorite, top: '50%', right: '-8%', delay: '2s' },
-                  { Icon: Groups, bottom: '-5%', left: '50%', delay: '4s' },
-                  { Icon: SportsSoccer, top: '50%', left: '-8%', delay: '6s' },
-                ].map(({ Icon, delay, ...pos }, idx) => (
+                {/* Left column */}
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, flex: 1, pt: { md: 4 } }}>
                   <Box
-                    key={idx}
+                    component={m.div}
+                    variants={varFade('inUp', { distance: 40 })}
                     sx={{
-                      position: 'absolute',
-                      ...pos,
-                      transform: 'translate(-50%, -50%)',
-                      width: 56,
-                      height: 56,
-                      borderRadius: '50%',
-                      backgroundColor: alpha('#fff', 0.12),
-                      backdropFilter: 'blur(8px)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      animation: `pulse 3s ease-in-out ${delay} infinite`,
-                      '@keyframes pulse': {
-                        '0%, 100%': { transform: 'translate(-50%, -50%) scale(1)', opacity: 0.8 },
-                        '50%': { transform: 'translate(-50%, -50%) scale(1.15)', opacity: 1 },
-                      },
+                      borderRadius: 4,
+                      overflow: 'hidden',
+                      '&:hover img': { transform: 'scale(1.06)' },
                     }}
                   >
-                    <Icon sx={{ fontSize: 28, color: theme.palette.secondary.light }} />
+                    <Box
+                    component="img"
+                      src="/assets/images/home/hero2.jpeg"
+                      alt="Tanora A LLB - Jeunesse"
+                    sx={{
+                        width: '100%',
+                        height: { xs: 200, md: 300 },
+                        objectFit: 'cover',
+                        display: 'block',
+                        transition: 'transform 0.5s ease',
+                      }}
+                    />
                   </Box>
-                ))}
+                  <Box
+                    component={m.div}
+                    variants={varFade('inUp', { distance: 40 })}
+                    transition={{ delay: 0.15 }}
+                    sx={{
+                      borderRadius: 4,
+                      overflow: 'hidden',
+                      '&:hover img': { transform: 'scale(1.06)' },
+                    }}
+                  >
+                    <Box
+                      component="img"
+                      src="/assets/images/home/hero5.jpg"
+                      alt="Tanora A LLB - Activités"
+                      sx={{
+                        width: '100%',
+                        height: { xs: 140, md: 200 },
+                      objectFit: 'cover',
+                        display: 'block',
+                        transition: 'transform 0.5s ease',
+                      }}
+                    />
+                  </Box>
+                </Box>
+
+                {/* Right column — offset for masonry effect */}
+                <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, flex: 1 }}>
+                  <Box
+                    component={m.div}
+                    variants={varFade('inUp', { distance: 40 })}
+                    transition={{ delay: 0.08 }}
+                    sx={{
+                      borderRadius: 4,
+                      overflow: 'hidden',
+                      '&:hover img': { transform: 'scale(1.06)' },
+                    }}
+                  >
+                    <Box
+                      component="img"
+                      src="/assets/images/home/hero4.jpeg"
+                      alt="Tanora A LLB - Communion"
+                      sx={{
+                        width: '100%',
+                        height: { xs: 140, md: 200 },
+                        objectFit: 'cover',
+                        display: 'block',
+                        transition: 'transform 0.5s ease',
+                      }}
+                    />
+                  </Box>
+                  <Box
+                    component={m.div}
+                    variants={varFade('inUp', { distance: 40 })}
+                    transition={{ delay: 0.22 }}
+                    sx={{
+                      borderRadius: 4,
+                      overflow: 'hidden',
+                      '&:hover img': { transform: 'scale(1.06)' },
+                    }}
+                  >
+                    <Box
+                      component="img"
+                      src="/assets/images/home/hero7.jpg"
+                      alt="Tanora A LLB - Camp"
+                      sx={{
+                        width: '100%',
+                        height: { xs: 200, md: 290 },
+                        objectFit: 'cover',
+                        display: 'block',
+                        transition: 'transform 0.5s ease',
+                      }}
+                    />
+                  </Box>
+                </Box>
               </Box>
             </Grid>
           </Grid>
@@ -591,7 +617,7 @@ export default function HomePage() {
 
       {/* ============================== ABOUT / PRÉSENTATION ============================== */}
       <Box
-        sx={{
+                    sx={{
           py: { xs: 8, md: 12 },
           backgroundColor: theme.palette.background.default,
         }}
@@ -604,7 +630,7 @@ export default function HomePage() {
                 variants={varFade('inLeft', { distance: 40 })}
                 sx={{
                   p: 5,
-                  borderRadius: 4,
+                      borderRadius: 4,
                   background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.04)}, ${alpha(theme.palette.secondary.main, 0.06)})`,
                   border: `1px solid ${alpha(theme.palette.primary.main, 0.08)}`,
                   position: 'relative',
@@ -676,7 +702,7 @@ export default function HomePage() {
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.primary.light})`,
+                        backgroundColor: theme.palette.primary.main,
                         color: '#fff',
                       }}
                     >
@@ -693,7 +719,7 @@ export default function HomePage() {
                   </Card>
                 ))}
               </Stack>
-            </Grid>
+          </Grid>
           </Grid>
         </Container>
       </Box>
@@ -708,35 +734,35 @@ export default function HomePage() {
         }}
       >
         <Container maxWidth="lg">
-          <Stack
-            component={m.div}
-            variants={varFade('inUp', { distance: 40 })}
-            spacing={2}
+            <Stack
+              component={m.div}
+              variants={varFade('inUp', { distance: 40 })}
+              spacing={2}
             sx={{ mb: 6, textAlign: 'center', maxWidth: 700, mx: 'auto' }}
-          >
+            >
             <Typography variant="overline" sx={{ color: 'primary.main', letterSpacing: 2, fontWeight: 700 }}>
               Notre mission & vision
-            </Typography>
+              </Typography>
             <Typography variant="h3" sx={{ fontWeight: 800 }}>
               Apporter l&apos;Évangile aux jeunes, grandir ensemble dans la foi
-            </Typography>
+              </Typography>
             <Typography variant="body1" sx={{ color: 'text.secondary', fontSize: '1.05rem' }}>
               Notre vision est de voir chaque jeune touché par l&apos;amour de Dieu, enraciné dans Sa Parole
               et engagé au service de Son Royaume. Nous croyons en une jeunesse transformée et transformatrice.
-            </Typography>
-          </Stack>
+              </Typography>
+            </Stack>
 
-          <Grid container spacing={3}>
+            <Grid container spacing={3}>
             {MISSION_CARDS.map((card, index) => (
               <Grid size={{ xs: 12, sm: 6, md: 3 }} key={card.title}>
-                <Card
-                  component={m.div}
-                  variants={varFade('inUp', { distance: 40 })}
+                  <Card
+                    component={m.div}
+                    variants={varFade('inUp', { distance: 40 })}
                   transition={{ delay: index * 0.1 }}
-                  sx={{
-                    height: '100%',
+                    sx={{
+                      height: '100%',
                     p: 3.5,
-                    borderRadius: 4,
+                      borderRadius: 4,
                     textAlign: 'center',
                     border: `1px solid ${alpha(theme.palette.primary.main, 0.08)}`,
                     bgcolor: alpha(theme.palette.common.white, 0.98),
@@ -747,10 +773,10 @@ export default function HomePage() {
                       boxShadow: `0 20px 50px ${alpha(theme.palette.primary.main, 0.15)}`,
                       borderColor: alpha(theme.palette.primary.main, 0.2),
                     },
-                  }}
-                >
-                  <Box
-                    sx={{
+                    }}
+                  >
+                    <Box
+                      sx={{
                       width: 72,
                       height: 72,
                       borderRadius: '50%',
@@ -759,22 +785,22 @@ export default function HomePage() {
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.1)}, ${alpha(theme.palette.secondary.main, 0.15)})`,
-                      color: theme.palette.primary.main,
+                      backgroundColor: theme.palette.primary.main,
+                      color: '#fff',
                     }}
                   >
                     <card.icon sx={{ fontSize: 34 }} />
                   </Box>
                   <Typography variant="h6" sx={{ fontWeight: 700, mb: 1 }}>
-                    {card.title}
-                  </Typography>
+                        {card.title}
+                      </Typography>
                   <Typography variant="body2" sx={{ color: 'text.secondary', lineHeight: 1.7 }}>
-                    {card.description}
-                  </Typography>
-                </Card>
-              </Grid>
-            ))}
-          </Grid>
+                        {card.description}
+                      </Typography>
+                  </Card>
+                </Grid>
+              ))}
+            </Grid>
 
           {/* Bible verse */}
           <Box
@@ -785,23 +811,13 @@ export default function HomePage() {
               p: { xs: 4, md: 5 },
               borderRadius: 4,
               textAlign: 'center',
-              background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.primary.dark})`,
+              backgroundColor: theme.palette.primary.main,
               color: '#fff',
               position: 'relative',
               overflow: 'hidden',
             }}
           >
-            <Box
-              sx={{
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                opacity: 0.05,
-                backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\'40\' height=\'40\' viewBox=\'0 0 40 40\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cg fill=\'%23fff\' fill-opacity=\'1\'%3E%3Cpath d=\'M18 0v20H0V0h18zm2 0h20v20H20V0zM0 22h18v18H0V22zm22 0h18v18H22V22z\'/%3E%3C/g%3E%3C/svg%3E")',
-              }}
-            />
+            
             <Typography
               variant="h5"
               sx={{ fontWeight: 400, fontStyle: 'italic', mb: 2, position: 'relative', lineHeight: 1.6, maxWidth: 700, mx: 'auto' }}
@@ -809,12 +825,12 @@ export default function HomePage() {
               &ldquo;Que personne ne méprise ta jeunesse ; mais sois un modèle pour les fidèles,
               en parole, en conduite, en amour, en foi, en pureté.&rdquo;
             </Typography>
-            <Typography variant="subtitle1" sx={{ fontWeight: 700, color: theme.palette.secondary.light, position: 'relative' }}>
+            <Typography variant="subtitle1" sx={{ fontWeight: 700, color: theme.palette.secondary.main, position: 'relative' }}>
               — 1 Timothée 4:12
             </Typography>
           </Box>
         </Container>
-      </Box>
+          </Box>
 
       {/* ============================== ACTIVITÉS ============================== */}
       <Box
@@ -823,19 +839,19 @@ export default function HomePage() {
         sx={{ py: { xs: 8, md: 12 }, backgroundColor: theme.palette.background.default }}
       >
         <Container maxWidth="lg">
-          <Stack
-            component={m.div}
-            variants={varFade('inUp', { distance: 40 })}
-            spacing={2}
+                <Stack
+                  component={m.div}
+                  variants={varFade('inUp', { distance: 40 })}
+                  spacing={2}
             sx={{ mb: 6, textAlign: 'center', maxWidth: 650, mx: 'auto' }}
-          >
+                >
             <Typography variant="overline" sx={{ color: 'primary.main', letterSpacing: 2, fontWeight: 700 }}>
               Nos activités
-            </Typography>
+                  </Typography>
             <Typography variant="h3" sx={{ fontWeight: 800 }}>
               Spirituel & sportif, un équilibre pour les jeunes
-            </Typography>
-          </Stack>
+                  </Typography>
+                </Stack>
 
           {/* Spiritual activities */}
           <Typography
@@ -849,12 +865,12 @@ export default function HomePage() {
           <Grid container spacing={3} sx={{ mb: 8 }}>
             {ACTIVITY_SPIRITUAL.map((act, index) => (
               <Grid size={{ xs: 12, md: 4 }} key={act.title}>
-                <Card
-                  component={m.div}
-                  variants={varFade('inUp', { distance: 40 })}
+                      <Card
+                        component={m.div}
+                        variants={varFade('inUp', { distance: 40 })}
                   transition={{ delay: index * 0.08 }}
-                  sx={{
-                    height: '100%',
+                        sx={{
+                          height: '100%',
                     borderRadius: 4,
                     border: `1px solid ${alpha(theme.palette.primary.main, 0.1)}`,
                     bgcolor: alpha(theme.palette.common.white, 0.98),
@@ -865,41 +881,36 @@ export default function HomePage() {
                       transform: 'translateY(-4px)',
                       boxShadow: `0 16px 40px ${alpha(theme.palette.primary.main, 0.1)}`,
                     },
-                  }}
-                >
-                  <Box
-                    sx={{
-                      height: 6,
-                      background: `linear-gradient(90deg, ${theme.palette.primary.main}, ${theme.palette.primary.light})`,
-                    }}
-                  />
+                        }}
+                      >
                   <CardContent sx={{ p: 3.5 }}>
                     <Box
                       sx={{
                         width: 60,
                         height: 60,
-                        borderRadius: 2,
+                            borderRadius: 2,
                         mb: 2,
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        background: `linear-gradient(135deg, ${alpha(theme.palette.primary.main, 0.08)}, ${alpha(theme.palette.primary.main, 0.15)})`,
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                        backgroundColor: alpha(theme.palette.primary.main, 0.06),
+                        border: `2px solid ${alpha(theme.palette.primary.main, 1)}`,
                         color: theme.palette.primary.main,
-                      }}
-                    >
+                          }}
+                        >
                       <act.icon sx={{ fontSize: 30 }} />
-                    </Box>
+                        </Box>
                     <Typography variant="h6" sx={{ fontWeight: 700, mb: 1 }}>
                       {act.title}
-                    </Typography>
+                        </Typography>
                     <Typography variant="body2" sx={{ color: 'text.secondary', lineHeight: 1.7 }}>
                       {act.description}
-                    </Typography>
+                        </Typography>
                   </CardContent>
-                </Card>
-              </Grid>
-            ))}
-          </Grid>
+                      </Card>
+                    </Grid>
+                  ))}
+                </Grid>
 
           {/* Sport activities */}
           <Typography
@@ -908,7 +919,7 @@ export default function HomePage() {
             variant="h5"
             sx={{ fontWeight: 700, mb: 3, display: 'flex', alignItems: 'center', gap: 1 }}
           >
-            <EmojiEvents sx={{ color: 'secondary.main' }} /> Activités sportives
+            <EmojiEvents sx={{ color: 'primary.main' }} /> Activités sportives
           </Typography>
           <Grid container spacing={3}>
             {ACTIVITY_SPORT.map((sport, index) => (
@@ -962,9 +973,9 @@ export default function HomePage() {
                 </Card>
               </Grid>
             ))}
-          </Grid>
+            </Grid>
         </Container>
-      </Box>
+          </Box>
 
       {/* ============================== CAMPS ============================== */}
       <Box
@@ -976,33 +987,33 @@ export default function HomePage() {
         }}
       >
         <Container maxWidth="lg">
-          <Stack
-            component={m.div}
-            variants={varFade('inUp', { distance: 40 })}
-            spacing={2}
+            <Stack
+              component={m.div}
+              variants={varFade('inUp', { distance: 40 })}
+              spacing={2}
             sx={{ mb: 6, textAlign: 'center', maxWidth: 680, mx: 'auto' }}
-          >
+            >
             <Typography variant="overline" sx={{ color: 'primary.main', letterSpacing: 2, fontWeight: 700 }}>
               Nos camps
-            </Typography>
+              </Typography>
             <Typography variant="h3" sx={{ fontWeight: 800 }}>
               Des moments inoubliables d&apos;édification
             </Typography>
             <Typography variant="body1" sx={{ color: 'text.secondary', fontSize: '1.05rem' }}>
               Nos camps sont des temps forts où les jeunes vivent une expérience unique de croissance
               spirituelle, de fraternité et de joie dans un cadre exceptionnel.
-            </Typography>
-          </Stack>
+              </Typography>
+            </Stack>
 
           <Grid container spacing={4}>
             {CAMPS_DATA.map((camp, index) => (
               <Grid size={{ xs: 12, md: 4 }} key={camp.title}>
                 <Card
-                  component={m.div}
-                  variants={varFade('inUp', { distance: 40 })}
+                    component={m.div}
+                    variants={varFade('inUp', { distance: 40 })}
                   transition={{ delay: index * 0.12 }}
-                  sx={{
-                    height: '100%',
+                    sx={{
+                      height: '100%',
                     borderRadius: 4,
                     overflow: 'hidden',
                     border: `1px solid ${alpha(theme.palette.primary.main, 0.08)}`,
@@ -1017,24 +1028,18 @@ export default function HomePage() {
                     },
                   }}
                 >
-                  {/* Top gradient bar */}
-                  <Box
-                    sx={{
-                      height: 8,
-                      background: `linear-gradient(90deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
-                    }}
-                  />
+          
                   <CardContent sx={{ p: 3.5, flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
                     <Box
                       sx={{
                         width: 64,
                         height: 64,
-                        borderRadius: 3,
+                      borderRadius: 3,
                         mb: 2.5,
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.primary.light})`,
+                        backgroundColor: theme.palette.primary.main,
                         color: '#fff',
                       }}
                     >
@@ -1048,30 +1053,30 @@ export default function HomePage() {
                     </Typography>
                     <Box sx={{ mt: 'auto' }}>
                       {camp.highlights.map((hl) => (
-                        <Chip
+                    <Chip
                           key={hl}
                           label={hl}
-                          size="small"
-                          sx={{
+                      size="small"
+                      sx={{
                             mr: 0.75,
                             mb: 0.75,
-                            borderRadius: 999,
+                        borderRadius: 999,
                             fontSize: '0.72rem',
-                            fontWeight: 600,
-                            backgroundColor: alpha(theme.palette.primary.main, 0.06),
+                        fontWeight: 600,
+                            backgroundColor: alpha(theme.palette.primary.main, 0.02),
                             color: theme.palette.primary.main,
-                            border: `1px solid ${alpha(theme.palette.primary.main, 0.12)}`,
+                            border: `1px solid ${alpha(theme.palette.primary.main, 1)}`,
                           }}
                         />
                       ))}
                     </Box>
                   </CardContent>
                 </Card>
-              </Grid>
-            ))}
-          </Grid>
+                </Grid>
+              ))}
+            </Grid>
         </Container>
-      </Box>
+          </Box>
 
       {/* ============================== GALERIE ============================== */}
       <Box
@@ -1080,23 +1085,23 @@ export default function HomePage() {
         sx={{ py: { xs: 8, md: 12 }, backgroundColor: theme.palette.background.default }}
       >
         <Container maxWidth="lg">
-          <Stack
-            component={m.div}
-            variants={varFade('inUp', { distance: 40 })}
-            spacing={2}
+            <Stack
+              component={m.div}
+              variants={varFade('inUp', { distance: 40 })}
+              spacing={2}
             sx={{ mb: 6, textAlign: 'center', maxWidth: 600, mx: 'auto' }}
-          >
+            >
             <Typography variant="overline" sx={{ color: 'primary.main', letterSpacing: 2, fontWeight: 700 }}>
               <CollectionsOutlined sx={{ fontSize: 18, verticalAlign: 'middle', mr: 0.5 }} />
               Galerie photos
-            </Typography>
+              </Typography>
             <Typography variant="h3" sx={{ fontWeight: 800 }}>
               Nos moments forts en images
-            </Typography>
-            <Typography variant="body1" sx={{ color: 'text.secondary' }}>
+              </Typography>
+              <Typography variant="body1" sx={{ color: 'text.secondary' }}>
               Revivez les temps forts de notre communauté : louanges, camps, matchs et moments de partage.
-            </Typography>
-          </Stack>
+              </Typography>
+            </Stack>
 
           <Grid container spacing={2}>
             {GALLERY_IMAGES.map((img, index) => (
@@ -1134,7 +1139,7 @@ export default function HomePage() {
                       left: 0,
                       right: 0,
                       bottom: 0,
-                      background: `linear-gradient(to top, ${alpha(theme.palette.primary.darker, 0.8)}, transparent)`,
+                      background: `linear-gradient(to top, ${alpha('#000', 0.85)}, transparent)`,
                       opacity: 0,
                       transition: 'opacity 0.3s ease',
                       display: 'flex',
@@ -1151,13 +1156,13 @@ export default function HomePage() {
             ))}
           </Grid>
         </Container>
-      </Box>
+          </Box>
 
       {/* ============================== CONTACT ============================== */}
-      <Box
+          <Box
         id="contact"
         component="section"
-        sx={{
+            sx={{
           py: { xs: 8, md: 12 },
           background: `linear-gradient(180deg, ${alpha(theme.palette.primary.main, 0.03)}, ${alpha(theme.palette.primary.main, 0.06)})`,
         }}
@@ -1190,19 +1195,19 @@ export default function HomePage() {
                         width: 48,
                         height: 48,
                         borderRadius: 2,
-                        display: 'flex',
+              display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        backgroundColor: alpha(theme.palette.primary.main, 0.08),
-                        color: theme.palette.primary.main,
+                        backgroundColor: theme.palette.primary.main,
+                        color: '#fff',
                       }}
                     >
                       <Email />
                     </Box>
                     <Box>
-                      <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
                         Email
-                      </Typography>
+            </Typography>
                       <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
                         tanora.a.llb@gmail.com
                       </Typography>
@@ -1218,20 +1223,20 @@ export default function HomePage() {
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        backgroundColor: alpha(theme.palette.primary.main, 0.08),
-                        color: theme.palette.primary.main,
+                        backgroundColor: theme.palette.primary.main,
+                        color: '#fff',
                       }}
                     >
                       <Phone />
                     </Box>
                     <Box>
-                      <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+            <Typography variant="body2" sx={{ color: 'text.secondary' }}>
                         Téléphone
                       </Typography>
                       <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
                         +261 34 00 000 00
-                      </Typography>
-                    </Box>
+            </Typography>
+          </Box>
                   </Stack>
 
                   <Stack direction="row" spacing={2} alignItems="center">
@@ -1243,8 +1248,8 @@ export default function HomePage() {
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        backgroundColor: alpha(theme.palette.primary.main, 0.08),
-                        color: theme.palette.primary.main,
+                        backgroundColor: theme.palette.primary.main,
+                        color: '#fff',
                       }}
                     >
                       <Place />
@@ -1263,18 +1268,20 @@ export default function HomePage() {
                 <Stack direction="row" spacing={1.5} sx={{ mt: 1 }}>
                   <IconButton
                     sx={{
-                      backgroundColor: alpha(theme.palette.primary.main, 0.08),
-                      color: theme.palette.primary.main,
-                      '&:hover': { backgroundColor: alpha(theme.palette.primary.main, 0.15) },
+                      backgroundColor: theme.palette.primary.main,
+                      color: '#fff',
+                      '&:hover': { backgroundColor: theme.palette.primary.dark, transform: 'translateY(-2px)' },
+                      transition: 'all 0.2s ease',
                     }}
                   >
                     <Facebook />
                   </IconButton>
                   <IconButton
                     sx={{
-                      backgroundColor: alpha(theme.palette.primary.main, 0.08),
-                      color: theme.palette.primary.main,
-                      '&:hover': { backgroundColor: alpha(theme.palette.primary.main, 0.15) },
+                      backgroundColor: theme.palette.primary.main,
+                      color: '#fff',
+                      '&:hover': { backgroundColor: theme.palette.primary.dark, transform: 'translateY(-2px)' },
+                      transition: 'all 0.2s ease',
                     }}
                   >
                     <YouTube />
@@ -1318,9 +1325,11 @@ export default function HomePage() {
                       fontWeight: 700,
                       borderRadius: 999,
                       alignSelf: 'flex-start',
-                      background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.primary.light})`,
+                      backgroundColor: theme.palette.primary.main,
+                      color: '#fff',
                       boxShadow: `0 12px 30px ${alpha(theme.palette.primary.main, 0.3)}`,
                       '&:hover': {
+                        backgroundColor: theme.palette.primary.dark,
                         transform: 'translateY(-2px)',
                         boxShadow: `0 16px 40px ${alpha(theme.palette.primary.main, 0.4)}`,
                       },
@@ -1348,14 +1357,19 @@ export default function HomePage() {
         <Container maxWidth="lg">
           <Grid container spacing={4} alignItems="center">
             <Grid size={{ xs: 12, md: 4 }}>
-              <Stack direction="row" alignItems="center" spacing={1.5} sx={{ mb: { xs: 2, md: 0 } }}>
-                <Church sx={{ fontSize: 32, color: theme.palette.secondary.main }} />
+              <Stack direction="row" alignItems="center" spacing={2} sx={{ mb: { xs: 2, md: 0 } }}>
+                <Box
+                  component="img"
+                  src="/logo/logo-ligue.svg"
+                  alt="Ligue pour la Lecture de la Bible"
+                  sx={{ height: 48, width: 'auto', filter: 'brightness(0) invert(1)', opacity: 0.9 }}
+                />
                 <Box>
-                  <Typography variant="h6" sx={{ fontWeight: 800, color: '#fff' }}>
-                    Tanora A LLB
+                  <Typography variant="subtitle1" sx={{ fontWeight: 700, color: '#fff', lineHeight: 1.3 }}>
+                    Ligue pour la Lecture de la Bible
                   </Typography>
-                  <Typography variant="caption" sx={{ color: alpha('#fff', 0.6) }}>
-                    Département Jeunesse • LLB
+                  <Typography variant="caption" sx={{ color: alpha('#fff', 0.5) }}>
+                    Tanora A — Département Jeunesse
                   </Typography>
                 </Box>
               </Stack>
@@ -1365,7 +1379,7 @@ export default function HomePage() {
                 &ldquo;Car je connais les projets que j&apos;ai formés sur vous, dit l&apos;Éternel,
                 projets de paix et non de malheur, afin de vous donner un avenir et de l&apos;espérance.&rdquo;
                 <br />
-                <strong style={{ color: 'rgba(255,255,255,0.8)' }}>Jérémie 29:11</strong>
+                <strong style={{ color: '#FFED00' }}>Jérémie 29:11</strong>
               </Typography>
             </Grid>
             <Grid size={{ xs: 12, md: 4 }}>
