@@ -25,7 +25,7 @@ export const viewport: Viewport = {
   themeColor: primary.main,
 };
 
-const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://example.com';
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://tanora-a.vercel.app';
 
 export const metadata: Metadata = {
   title: 'Tanora A LLB',
@@ -58,7 +58,7 @@ export const metadata: Metadata = {
       'Rejoignez Tanora A LLB, le département jeunesse de la Ligue pour la Lecture de la Bible. Ensemble, grandissons dans la foi !',
     images: [
       {
-        url: '/assets/images/home/hero5.jpg',
+        url: `${siteUrl}/assets/images/home/hero5.jpg`,
         width: 1200,
         height: 630,
         alt: 'Tanora A LLB - Club chrétien pour les jeunes',
@@ -71,7 +71,7 @@ export const metadata: Metadata = {
     title: 'Tanora A LLB',
     description:
       'Club chrétien pour les jeunes : foi, sport, camps et communauté.',
-    images: ['/assets/images/home/hero5.jpg'],
+    images: [`${siteUrl}/assets/images/home/hero5.jpg`],
   },
   robots: {
     index: true,
