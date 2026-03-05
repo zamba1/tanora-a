@@ -4,19 +4,25 @@ import dynamic from 'next/dynamic';
 import { useState, useEffect, useCallback } from 'react';
 import { m, useScroll, useMotionValueEvent } from 'framer-motion';
 
+import Fab from '@mui/material/Fab';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import Chip from '@mui/material/Chip';
 import Grid from '@mui/material/Grid';
 import Stack from '@mui/material/Stack';
 import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import Divider from '@mui/material/Divider';
 import Container from '@mui/material/Container';
 import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import CardContent from '@mui/material/CardContent';
 import { alpha, useTheme } from '@mui/material/styles';
+import DialogContent from '@mui/material/DialogContent';
+import useMediaQuery from '@mui/material/useMediaQuery';
 import {
+  Close,
   Email,
   Phone,
   Place,
@@ -31,9 +37,13 @@ import {
   AutoAwesome,
   EmojiEvents,
   Brightness7,
+  ContentCopy,
+  PhoneAndroid,
   SportsSoccer,
+  FavoriteBorder,
   SportsBasketball,
   VolunteerActivism,
+  CheckCircleOutline,
   CollectionsOutlined,
 } from '@mui/icons-material';
 
@@ -359,10 +369,297 @@ function FloatingNavbar() {
 
 export default function HomePage() {
   const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
+  const [donationOpen, setDonationOpen] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  const MVOLA_NUMBER = '034 00 000 00';
+
+  const handleCopyNumber = useCallback(() => {
+    navigator.clipboard.writeText(MVOLA_NUMBER.replace(/\s/g, ''));
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  }, [MVOLA_NUMBER]);
 
   return (
     <MotionContainer>
       <FloatingNavbar />
+
+      {/* ============================== STICKY DONATION FAB ============================== */}
+      <Fab
+        onClick={() => setDonationOpen(true)}
+        sx={{
+          position: 'fixed',
+          bottom: { xs: 24, md: 32 },
+          right: { xs: 16, md: 32 },
+          zIndex: 1200,
+          width: { xs: 56, md: 64 },
+          height: { xs: 56, md: 64 },
+          backgroundColor: '#fff',
+          color: theme.palette.primary.main,
+          boxShadow: `0 8px 32px ${alpha(theme.palette.secondary.main, 0.45)}`,
+          '&:hover': {
+            transform: 'scale(1.08)',
+            boxShadow: `0 12px 40px ${alpha(theme.palette.primary.main, 0.55)}`,
+            color: '#fff',
+          },
+          transition: 'all 0.3s ease',
+          animation: 'donationPulse 2.5s ease-in-out infinite',
+          '@keyframes donationPulse': {
+            '0%, 100%': { boxShadow: `0 8px 32px ${alpha(theme.palette.primary.main, 0.45)}` },
+            '50%': { boxShadow: `0 8px 32px ${alpha(theme.palette.primary.main, 0.7)}, 0 0 0 8px ${alpha(theme.palette.primary.main, 0.15)}` },
+          },
+        }}
+      >
+        <FavoriteBorder sx={{ fontSize: { xs: 26, md: 30 } }} />
+      </Fab>
+
+      {/* ============================== DONATION MODAL ============================== */}
+      <Dialog
+        open={donationOpen}
+        onClose={() => setDonationOpen(false)}
+        fullScreen={isMobile}
+        maxWidth="sm"
+        fullWidth
+        PaperProps={{
+          sx: {
+            borderRadius: isMobile ? 0 : 4,
+            overflow: 'hidden',
+          },
+        }}
+      >
+        {/* Header */}
+        <Box
+          sx={{
+            background: `linear-gradient(135deg, ${theme.palette.primary.main} 0%, ${theme.palette.primary.darker} 100%)`,
+            color: '#fff',
+            px: { xs: 3, md: 4 },
+            py: { xs: 3, md: 4 },
+            position: 'relative',
+          }}
+        >
+          <IconButton
+            onClick={() => setDonationOpen(false)}
+            sx={{
+              position: 'absolute',
+              top: 12,
+              right: 12,
+              color: alpha('#fff', 0.7),
+              '&:hover': { color: '#fff', backgroundColor: alpha('#fff', 0.1) },
+            }}
+          >
+            <Close />
+          </IconButton>
+
+          <Stack direction="row" alignItems="center" spacing={1.5} sx={{ mb: 2 }}>
+            <Box
+              sx={{
+                width: 48,
+                height: 48,
+                borderRadius: '50%',
+                backgroundColor: '#fff',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <FavoriteBorder sx={{ color: theme.palette.primary.main, fontSize: 26 }} />
+            </Box>
+            <Typography variant="h5" sx={{ fontWeight: 800 }}>
+              Faire un don
+            </Typography>
+          </Stack>
+
+          <Typography variant="body2" sx={{ color: alpha('#fff', 0.8), lineHeight: 1.7 }}>
+            Votre générosité permet à Tanora A LLB de continuer à apporter l&apos;Évangile aux jeunes,
+            organiser des camps d&apos;édification et soutenir nos activités spirituelles et sportives.
+          </Typography>
+        </Box>
+
+        <DialogContent sx={{ p: { xs: 3, md: 4 } }}>
+          {/* Pourquoi donner */}
+          <Typography variant="subtitle1" sx={{ fontWeight: 700, mb: 2, color: theme.palette.primary.main }}>
+            Pourquoi on en a besoin ?
+          </Typography>
+          <Stack spacing={1.5} sx={{ mb: 3 }}>
+            {[
+              'Soutenir les enseignements bibliques et les rencontres de jeunes',
+              'Financer l\'organisation de camps d\'édification spirituelle',
+              'Contribuer aux activités sportives (football, basketball)',
+              'Permettre l\'achat de matériel et de supports pédagogiques',
+            ].map((item, index) => (
+              <Stack key={index} direction="row" spacing={1.5} alignItems="flex-start">
+                <CheckCircleOutline
+                  sx={{ color: theme.palette.secondary.dark, fontSize: 20, mt: 0.2, flexShrink: 0 }}
+                />
+                <Typography variant="body2" sx={{ color: 'text.secondary', lineHeight: 1.6 }}>
+                  {item}
+                </Typography>
+              </Stack>
+            ))}
+          </Stack>
+
+          <Divider sx={{ my: 3 }} />
+
+          {/* Comment procéder */}
+          <Typography variant="subtitle1" sx={{ fontWeight: 700, mb: 2, color: theme.palette.primary.main }}>
+            Comment procéder ?
+          </Typography>
+          <Typography variant="body2" sx={{ color: 'text.secondary', mb: 3, lineHeight: 1.7 }}>
+            Envoyez votre don via <strong>MVola</strong> (Telma Mobile Money) au numéro ci-dessous.
+            Chaque contribution, quelle que soit sa taille, fait une réelle différence.
+          </Typography>
+
+          {/* MVola Card */}
+          <Box
+            sx={{
+              p: 3,
+              borderRadius: 3,
+              background: `${alpha(theme.palette.primary.main, 0.03)}`,
+              border: `2px solid ${alpha(theme.palette.primary.main, 0.3)}`,
+              position: 'relative',
+              overflow: 'hidden',
+            }}
+          >
+            <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 2 }}>
+              <PhoneAndroid sx={{ color: theme.palette.secondary.dark, fontSize: 22 }} />
+              <Typography variant="subtitle2" sx={{ fontWeight: 700, color: theme.palette.primary.main }}>
+                MVola – Mobile Money
+              </Typography>
+            </Stack>
+
+            <Stack
+              direction="row"
+              alignItems="center"
+              justifyContent="space-between"
+              sx={{
+                p: 2,
+                borderRadius: 2,
+                backgroundColor: '#fff',
+                border: `1px solid ${alpha(theme.palette.grey[300], 0.8)}`,
+              }}
+            >
+              <Box>
+                <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block', mb: 0.3 }}>
+                  Numéro MVola
+                </Typography>
+                <Typography
+                  variant="h5"
+                  sx={{
+                    fontWeight: 800,
+                    letterSpacing: 2,
+                    color: theme.palette.primary.main,
+                    fontFamily: 'monospace',
+                  }}
+                >
+                  {MVOLA_NUMBER}
+                </Typography>
+              </Box>
+              <IconButton
+                onClick={handleCopyNumber}
+                sx={{
+                  backgroundColor: copied
+                    ? alpha(theme.palette.success.main, 0.1)
+                    : alpha(theme.palette.primary.main, 0.08),
+                  color: copied ? theme.palette.success.main : theme.palette.primary.main,
+                  '&:hover': {
+                    backgroundColor: copied
+                      ? alpha(theme.palette.success.main, 0.15)
+                      : alpha(theme.palette.primary.main, 0.12),
+                  },
+                  transition: 'all 0.2s ease',
+                }}
+              >
+                {copied ? <CheckCircleOutline /> : <ContentCopy />}
+              </IconButton>
+            </Stack>
+
+            <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block', mt: 1.5 }}>
+              Nom du compte : <strong>Tanora A LLB</strong>
+            </Typography>
+          </Box>
+
+          {/* Étapes */}
+          <Box sx={{ mt: 3 }}>
+            <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1.5, color: theme.palette.primary.main }}>
+              Étapes pour envoyer via MVola :
+            </Typography>
+            <Stack spacing={1}>
+              {[
+                'Composez le #111# sur votre téléphone Telma',
+                'Choisissez « Envoi d\'argent »',
+                `Entrez le numéro : ${MVOLA_NUMBER}`,
+                'Saisissez le montant de votre don',
+                'Confirmez avec votre code PIN MVola',
+              ].map((step, index) => (
+                <Stack key={index} direction="row" spacing={1.5} alignItems="flex-start">
+                  <Box
+                    sx={{
+                      width: 24,
+                      height: 24,
+                      borderRadius: '50%',
+                      backgroundColor: theme.palette.primary.main,
+                      color: '#fff',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontSize: 12,
+                      fontWeight: 700,
+                      flexShrink: 0,
+                      mt: 0.1,
+                    }}
+                  >
+                    {index + 1}
+                  </Box>
+                  <Typography variant="body2" sx={{ color: 'text.secondary', lineHeight: 1.6 }}>
+                    {step}
+                  </Typography>
+                </Stack>
+              ))}
+            </Stack>
+          </Box>
+
+          <Divider sx={{ my: 3 }} />
+
+          <Typography
+            variant="body2"
+            sx={{
+              textAlign: 'center',
+              color: 'text.secondary',
+              fontStyle: 'italic',
+              lineHeight: 1.7,
+            }}
+          >
+            &ldquo;Chacun donne comme il l&apos;a résolu en son cœur, sans tristesse ni contrainte ;
+            car Dieu aime celui qui donne avec joie.&rdquo;
+            <br />
+            <strong style={{ color: theme.palette.secondary.dark }}>2 Corinthiens 9:7</strong>
+          </Typography>
+
+          <Button
+            variant="contained"
+            fullWidth
+            size="large"
+            onClick={() => setDonationOpen(false)}
+            sx={{
+              mt: 3,
+              py: 1.5,
+              fontWeight: 700,
+              borderRadius: 999,
+              backgroundColor: theme.palette.primary.main,
+              color: '#fff',
+              fontSize: '1rem',
+              boxShadow: `0 12px 30px ${alpha(theme.palette.primary.main, 0.3)}`,
+              '&:hover': {
+                backgroundColor: theme.palette.primary.dark,
+                boxShadow: `0 16px 40px ${alpha(theme.palette.primary.main, 0.4)}`,
+              },
+            }}
+          >
+            Merci pour votre soutien 🙏
+          </Button>
+        </DialogContent>
+      </Dialog>
 
       {/* ============================== HERO ============================== */}
       <Box

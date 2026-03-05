@@ -28,7 +28,7 @@ export const viewport: Viewport = {
 const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://example.com';
 
 export const metadata: Metadata = {
-  title: 'Tanora A LLB - Département Jeunesse de la Ligue pour la Lecture de la Bible',
+  title: 'Tanora A LLB',
   description:
     'Club chrétien dédié aux jeunes : rencontres spirituelles, enseignements bibliques, camps d\'édification, football et basketball. Grandir ensemble dans la foi.',
   keywords: [
@@ -53,12 +53,12 @@ export const metadata: Metadata = {
     locale: 'fr_FR',
     url: siteUrl,
     siteName: 'Tanora A LLB',
-    title: 'Tanora A LLB - Département Jeunesse',
+    title: 'Tanora A LLB',
     description:
       'Rejoignez Tanora A LLB, le département jeunesse de la Ligue pour la Lecture de la Bible. Ensemble, grandissons dans la foi !',
     images: [
       {
-        url: `${siteUrl}/og-image.jpg`,
+        url: '/assets/images/home/hero5.jpg',
         width: 1200,
         height: 630,
         alt: 'Tanora A LLB - Club chrétien pour les jeunes',
@@ -68,10 +68,10 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Tanora A LLB - Département Jeunesse',
+    title: 'Tanora A LLB',
     description:
       'Club chrétien pour les jeunes : foi, sport, camps et communauté.',
-    images: [`${siteUrl}/og-image.jpg`],
+    images: ['/assets/images/home/hero5.jpg'],
   },
   robots: {
     index: true,
