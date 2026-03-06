@@ -1,7 +1,7 @@
 'use client';
 
 import dynamic from 'next/dynamic';
-import { useState, useEffect, useCallback } from 'react';
+import { useMemo, useState, useEffect, useCallback } from 'react';
 import { m, useScroll, useMotionValueEvent } from 'framer-motion';
 
 import Fab from '@mui/material/Fab';
@@ -18,6 +18,7 @@ import TextField from '@mui/material/TextField';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import CardContent from '@mui/material/CardContent';
+import Language from '@mui/icons-material/Language';
 import { alpha, useTheme } from '@mui/material/styles';
 import DialogContent from '@mui/material/DialogContent';
 import useMediaQuery from '@mui/material/useMediaQuery';
@@ -47,6 +48,8 @@ import {
   CollectionsOutlined,
 } from '@mui/icons-material';
 
+import { useLanguage } from 'src/locales';
+
 import { varFade, varZoom } from 'src/components/animate/variants';
 import { MotionContainer } from 'src/components/animate/motion-container';
 
@@ -72,114 +75,34 @@ const LeafletMarker = dynamic(() => import('react-leaflet').then((mod) => mod.Ma
 const Popup = dynamic(() => import('react-leaflet').then((mod) => mod.Popup), { ssr: false });
 
 // ======================================================================
-// DATA
+// DATA (structural only – text comes from translations)
 // ======================================================================
 
-const NAV_ITEMS = [
-  { id: 'accueil', label: 'Accueil' },
-  { id: 'mission', label: 'Mission' },
-  { id: 'activites', label: 'Activités' },
-  { id: 'camps', label: 'Camps' },
-  { id: 'galerie', label: 'Galerie' },
-  { id: 'contact', label: 'Contact' },
+const NAV_IDS = ['accueil', 'mission', 'activites', 'camps', 'galerie', 'contact'] as const;
+
+const MISSION_ICONS = [Campaign, MenuBook, Diversity3, VolunteerActivism];
+
+const SPIRITUAL_ICONS = [Groups, MenuBook, Church];
+
+const SPORT_META = [
+  { icon: SportsSoccer, color: 'success' as const },
+  { icon: SportsBasketball, color: 'warning' as const },
 ];
 
-const MISSION_CARDS = [
-  {
-    title: 'Évangélisation',
-    description:
-      'Apporter la Bonne Nouvelle de Jésus-Christ aux jeunes, leur montrer l\'amour de Dieu et les accompagner dans leur cheminement de foi.',
-    icon: Campaign,
-  },
-  {
-    title: 'Édification spirituelle',
-    description:
-      'Aider chaque jeune à grandir dans sa relation avec Dieu à travers l\'étude de la Bible, la prière et la communion fraternelle.',
-    icon: MenuBook,
-  },
-  {
-    title: 'Communion fraternelle',
-    description:
-      'Créer une communauté soudée où les jeunes se soutiennent mutuellement, partagent et grandissent ensemble dans l\'amour du Christ.',
-    icon: Diversity3,
-  },
-  {
-    title: 'Service & engagement',
-    description:
-      'Encourager les jeunes à servir dans l\'église et la société, en étant des témoins vivants de la transformation par l\'Évangile.',
-    icon: VolunteerActivism,
-  },
+const CAMP_ICONS = [Brightness7, EmojiEvents, AutoAwesome];
+
+const GALLERY_SRCS = [
+  '/assets/images/home/hero.jpeg',
+  '/assets/images/home/hero2.jpeg',
+  '/assets/images/home/hero3.jpeg',
+  '/assets/images/home/hero4.jpeg',
+  '/assets/images/home/hero5.jpg',
+  '/assets/images/home/hero6.jpg',
+  '/assets/images/home/hero7.jpg',
+  '/assets/images/home/hero8.jpeg',
 ];
 
-const ACTIVITY_SPIRITUAL = [
-  {
-    title: 'Rencontres hebdomadaires',
-    description: 'Chaque semaine, nous nous retrouvons pour des moments de louange, de prière et d\'étude biblique.',
-    icon: Groups,
-  },
-  {
-    title: 'Enseignements bibliques',
-    description: 'Des enseignements profonds et adaptés aux jeunes pour mieux comprendre la Parole de Dieu.',
-    icon: MenuBook,
-  },
-  {
-    title: 'Veillées de prière',
-    description: 'Des temps forts de prière collective pour intercéder et chercher la face de Dieu ensemble.',
-    icon: Church,
-  },
-];
-
-const ACTIVITY_SPORT = [
-  {
-    title: 'Football',
-    description:
-      'Des entraînements réguliers et des matchs amicaux pour développer l\'esprit d\'équipe et la discipline dans un cadre fraternel.',
-    icon: SportsSoccer,
-    color: 'success' as const,
-  },
-  {
-    title: 'Basketball',
-    description:
-      'Sessions de basketball ouvertes à tous niveaux, favorisant la cohésion et le dépassement de soi entre jeunes du club.',
-    icon: SportsBasketball,
-    color: 'warning' as const,
-  },
-];
-
-const CAMPS_DATA = [
-  {
-    title: 'Camp d\'édification spirituelle',
-    description:
-      'Plusieurs jours d\'immersion spirituelle : enseignements approfondis, ateliers pratiques, temps de louange et de prière dans un cadre inspirant.',
-    icon: Brightness7,
-    highlights: ['Enseignements thématiques', 'Ateliers pratiques', 'Louange & adoration', 'Communion fraternelle'],
-  },
-  {
-    title: 'Camp sportif & récréatif',
-    description:
-      'Allier sport, jeux et moments spirituels. Un camp dynamique qui forge les amitiés et renforce le corps et l\'esprit.',
-    icon: EmojiEvents,
-    highlights: ['Tournois de foot & basket', 'Jeux d\'équipe', 'Randonnées', 'Feux de camp & témoignages'],
-  },
-  {
-    title: 'Retraite spirituelle',
-    description:
-      'Un temps de pause pour se rapprocher de Dieu, loin du bruit quotidien. Méditation, jeûne et prière dans un lieu paisible.',
-    icon: AutoAwesome,
-    highlights: ['Méditation biblique', 'Temps de silence', 'Prière personnelle', 'Partages en petits groupes'],
-  },
-];
-
-const GALLERY_IMAGES = [
-  { src: '/assets/images/home/hero.jpeg', alt: 'Louange et adoration' },
-  { src: '/assets/images/home/hero2.jpeg', alt: 'Communion fraternelle' },
-  { src: '/assets/images/home/hero3.jpeg', alt: 'Football entre jeunes' },
-  { src: '/assets/images/home/hero4.jpeg', alt: 'Basketball' },
-  { src: '/assets/images/home/hero5.jpg', alt: 'Étude biblique' },
-  { src: '/assets/images/home/hero6.jpg', alt: 'Camp de jeunes' },
-  { src: '/assets/images/home/hero7.jpg', alt: 'Groupe de jeunes' },
-  { src: '/assets/images/home/hero8.jpeg', alt: 'Nature - retraite' },
-];
+const ABOUT_ICONS = [Church, Groups, Hiking];
 
 // ======================================================================
 // FLOATING NAVBAR
@@ -188,6 +111,16 @@ const GALLERY_IMAGES = [
 function FloatingNavbar() {
   const theme = useTheme();
   const { scrollY } = useScroll();
+  const { locale, t, toggleLocale } = useLanguage();
+
+  const navItems = useMemo(
+    () =>
+      NAV_IDS.map((id) => ({
+        id,
+        label: t.nav[id],
+      })),
+    [t]
+  );
 
   const [scrolled, setScrolled] = useState(false);
   const [activeSection, setActiveSection] = useState('accueil');
@@ -198,7 +131,7 @@ function FloatingNavbar() {
 
   useEffect(() => {
     const handleScroll = () => {
-      const sections = NAV_ITEMS.map((item) => ({
+      const sections = navItems.map((item) => ({
         id: item.id,
         el: document.getElementById(item.id),
       }));
@@ -213,7 +146,7 @@ function FloatingNavbar() {
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [navItems]);
 
   const handleNavClick = useCallback((sectionId: string) => {
     const element = document.getElementById(sectionId);
@@ -264,16 +197,6 @@ function FloatingNavbar() {
             alt="Tanora A LLB"
             sx={{ height: 40, width: 'auto', mr: 1 }}
           />
-          {/* <Typography
-            variant="h6"
-            sx={{
-              fontWeight: 800,
-              color: theme.palette.primary.main,
-              display: { xs: 'none', sm: 'block' },
-            }}
-          >
-            Tanora A
-          </Typography> */}
         </Box>
 
         {/* Desktop nav */}
@@ -282,7 +205,7 @@ function FloatingNavbar() {
           spacing={0.5}
           sx={{ flex: 1, justifyContent: 'center', display: { xs: 'none', md: 'flex' } }}
         >
-          {NAV_ITEMS.map((item) => {
+          {navItems.map((item) => {
             const isActive = activeSection === item.id;
             return (
               <Button
@@ -328,7 +251,7 @@ function FloatingNavbar() {
             py: 0.5,
           }}
         >
-          {NAV_ITEMS.map((item) => {
+          {navItems.map((item) => {
             const isActive = activeSection === item.id;
             return (
               <Button
@@ -358,6 +281,33 @@ function FloatingNavbar() {
             );
           })}
         </Stack>
+
+        {/* Language switcher */}
+        <Button
+          onClick={toggleLocale}
+          size="small"
+          disableRipple
+          sx={{
+            minWidth: 'auto',
+            px: 1.5,
+            py: 0.5,
+            borderRadius: 999,
+            fontSize: '0.8rem',
+            fontWeight: 700,
+            flexShrink: 0,
+            color: theme.palette.primary.main,
+            backgroundColor: alpha(theme.palette.primary.main, 0.06),
+            border: `1px solid ${alpha(theme.palette.primary.main, 0.15)}`,
+            gap: 0.5,
+            transition: 'all 0.2s ease',
+            '&:hover': {
+              backgroundColor: alpha(theme.palette.primary.main, 0.12),
+            },
+          }}
+          startIcon={<Language sx={{ fontSize: 18 }} />}
+        >
+          {locale === 'fr' ? 'EN' : 'FR'}
+        </Button>
       </Box>
     </Box>
   );
@@ -369,6 +319,7 @@ function FloatingNavbar() {
 
 export default function HomePage() {
   const theme = useTheme();
+  const { t } = useLanguage();
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
   const [donationOpen, setDonationOpen] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -466,28 +417,22 @@ export default function HomePage() {
               <FavoriteBorder sx={{ color: theme.palette.primary.main, fontSize: 26 }} />
             </Box>
             <Typography variant="h5" sx={{ fontWeight: 800 }}>
-              Faire un don
+              {t.donation.modalTitle}
             </Typography>
           </Stack>
 
           <Typography variant="body2" sx={{ color: alpha('#fff', 0.8), lineHeight: 1.7 }}>
-            Votre générosité permet à Tanora A LLB de continuer à apporter l&apos;Évangile aux jeunes,
-            organiser des camps d&apos;édification et soutenir nos activités spirituelles et sportives.
+            {t.donation.modalDescription}
           </Typography>
         </Box>
 
         <DialogContent sx={{ p: { xs: 3, md: 4 } }}>
           {/* Pourquoi donner */}
           <Typography variant="subtitle1" sx={{ fontWeight: 700, mb: 2, color: theme.palette.primary.main }}>
-            Pourquoi on en a besoin ?
+            {t.donation.whyTitle}
           </Typography>
           <Stack spacing={1.5} sx={{ mb: 3 }}>
-            {[
-              'Soutenir les enseignements bibliques et les rencontres de jeunes',
-              'Financer l\'organisation de camps d\'édification spirituelle',
-              'Contribuer aux activités sportives (football, basketball)',
-              'Permettre l\'achat de matériel et de supports pédagogiques',
-            ].map((item, index) => (
+            {t.donation.whyReasons.map((item, index) => (
               <Stack key={index} direction="row" spacing={1.5} alignItems="flex-start">
                 <CheckCircleOutline
                   sx={{ color: theme.palette.secondary.dark, fontSize: 20, mt: 0.2, flexShrink: 0 }}
@@ -503,11 +448,10 @@ export default function HomePage() {
 
           {/* Comment procéder */}
           <Typography variant="subtitle1" sx={{ fontWeight: 700, mb: 2, color: theme.palette.primary.main }}>
-            Comment procéder ?
+            {t.donation.howTitle}
           </Typography>
           <Typography variant="body2" sx={{ color: 'text.secondary', mb: 3, lineHeight: 1.7 }}>
-            Envoyez votre don via <strong>MVola</strong> (Telma Mobile Money) au numéro ci-dessous.
-            Chaque contribution, quelle que soit sa taille, fait une réelle différence.
+            {t.donation.howDescription}
           </Typography>
 
           {/* MVola Card */}
@@ -524,7 +468,7 @@ export default function HomePage() {
             <Stack direction="row" alignItems="center" spacing={1} sx={{ mb: 2 }}>
               <PhoneAndroid sx={{ color: theme.palette.secondary.dark, fontSize: 22 }} />
               <Typography variant="subtitle2" sx={{ fontWeight: 700, color: theme.palette.primary.main }}>
-                MVola – Mobile Money
+                {t.donation.mvolaLabel}
               </Typography>
             </Stack>
 
@@ -575,23 +519,20 @@ export default function HomePage() {
             </Stack>
 
             <Typography variant="caption" sx={{ color: 'text.secondary', display: 'block', mt: 1.5 }}>
-              Nom du compte : <strong>Tanora A LLB</strong>
+              {t.donation.accountName} <strong>Tanora A LLB</strong>
             </Typography>
           </Box>
 
           {/* Étapes */}
           <Box sx={{ mt: 3 }}>
             <Typography variant="subtitle2" sx={{ fontWeight: 600, mb: 1.5, color: theme.palette.primary.main }}>
-              Étapes pour envoyer via MVola :
+              {t.donation.stepsTitle}
             </Typography>
             <Stack spacing={1}>
-              {[
-                'Composez le #111# sur votre téléphone Telma',
-                'Choisissez « Envoi d\'argent »',
-                `Entrez le numéro : ${MVOLA_NUMBER}`,
-                'Saisissez le montant de votre don',
-                'Confirmez avec votre code PIN MVola',
-              ].map((step, index) => (
+              {t.donation.steps.map((step, index) => {
+                const displayStep = index === 2 ? `${step} ${MVOLA_NUMBER}` : step;
+                return displayStep;
+              }).map((step, index) => (
                 <Stack key={index} direction="row" spacing={1.5} alignItems="flex-start">
                   <Box
                     sx={{
@@ -630,10 +571,9 @@ export default function HomePage() {
               lineHeight: 1.7,
             }}
           >
-            &ldquo;Chacun donne comme il l&apos;a résolu en son cœur, sans tristesse ni contrainte ;
-            car Dieu aime celui qui donne avec joie.&rdquo;
+            {t.donation.bibleVerse}
             <br />
-            <strong style={{ color: theme.palette.secondary.dark }}>2 Corinthiens 9:7</strong>
+            <strong style={{ color: theme.palette.secondary.dark }}>{t.donation.bibleRef}</strong>
           </Typography>
 
           <Button
@@ -656,7 +596,7 @@ export default function HomePage() {
               },
             }}
           >
-            Merci pour votre soutien 🙏
+            {t.donation.thankYou}
           </Button>
         </DialogContent>
       </Dialog>
@@ -740,7 +680,7 @@ export default function HomePage() {
                     letterSpacing: '0.01em',
                   }}
                 >
-                  Ligue pour la Lecture de la Bible
+                  {t.hero.llbSubtitle}
                 </Box>
               </Typography>
 
@@ -757,8 +697,7 @@ export default function HomePage() {
                   fontSize: { xs: '1.05rem', md: '1.2rem' },
                 }}
               >
-                Tanora A – Département de la Ligue pour la Lecture de la Bible.
-                Grandir dans la foi, partager l&apos;Évangile et vivre l&apos;Évangile ensemble.
+                {t.hero.description}
               </Typography>
 
               <Stack
@@ -791,7 +730,7 @@ export default function HomePage() {
                     transition: 'all 0.25s ease',
                   }}
                 >
-                  Découvrir notre mission
+                  {t.hero.btnMission}
                 </Button>
                 <Button
                   variant="outlined"
@@ -816,7 +755,7 @@ export default function HomePage() {
                     },
                   }}
                 >
-                  Nous rejoindre
+                  {t.hero.btnJoin}
                 </Button>
               </Stack>
             </Grid>
@@ -966,21 +905,16 @@ export default function HomePage() {
                   }}
                 />
                 <Typography variant="overline" sx={{ color: 'primary.main', letterSpacing: 2 }}>
-                  Qui sommes-nous ?
+                  {t.about.overline}
                 </Typography>
                 <Typography variant="h3" sx={{ fontWeight: 800, mt: 1, mb: 2 }}>
-                  Un club au service de la jeunesse chrétienne
+                  {t.about.title}
                 </Typography>
                 <Typography variant="body1" sx={{ color: 'text.secondary', lineHeight: 1.8, mb: 2 }}>
-                  <strong>Tanora A LLB</strong> est le département jeunesse de la <strong>Ligue pour la Lecture
-                  de la Bible</strong>. Notre vocation : rassembler les jeunes autour de la Parole de Dieu,
-                  les accompagner dans leur croissance spirituelle et leur offrir un cadre épanouissant
-                  alliant foi, fraternité et activités enrichissantes.
+                  {t.about.paragraph1}
                 </Typography>
                 <Typography variant="body1" sx={{ color: 'text.secondary', lineHeight: 1.8 }}>
-                  Que ce soit à travers nos rencontres spirituelles, nos activités sportives ou nos camps
-                  d&apos;édification, nous croyons que chaque jeune est appelé à vivre pleinement sa foi
-                  et à impacter sa génération pour Christ.
+                  {t.about.paragraph2}
                 </Typography>
               </Box>
             </Grid>
@@ -990,11 +924,10 @@ export default function HomePage() {
                 variants={varFade('inRight', { distance: 40 })}
                 spacing={3}
               >
-                {[
-                  { icon: Church, label: 'Fondé sur la Parole de Dieu', desc: 'La Bible est au cœur de toutes nos activités et enseignements.' },
-                  { icon: Groups, label: 'Une communauté vivante', desc: 'Des centaines de jeunes unis par la même passion pour Christ.' },
-                  { icon: Hiking, label: 'Activités variées', desc: 'Spirituel, sportif, culturel : un programme riche pour chaque jeune.' },
-                ].map((item, idx) => (
+                {t.about.cards.map((card, idx) => {
+                  const AboutIcon = ABOUT_ICONS[idx];
+                  return { icon: AboutIcon, label: card.label, desc: card.desc };
+                }).map((item, idx) => (
                   <Card
                     key={idx}
                     sx={{
@@ -1060,19 +993,21 @@ export default function HomePage() {
             sx={{ mb: 6, textAlign: 'center', maxWidth: 700, mx: 'auto' }}
             >
             <Typography variant="overline" sx={{ color: 'primary.main', letterSpacing: 2, fontWeight: 700 }}>
-              Notre mission & vision
+              {t.mission.overline}
               </Typography>
             <Typography variant="h3" sx={{ fontWeight: 800 }}>
-              Apporter l&apos;Évangile aux jeunes, grandir ensemble dans la foi
+              {t.mission.title}
               </Typography>
             <Typography variant="body1" sx={{ color: 'text.secondary', fontSize: '1.05rem' }}>
-              Notre vision est de voir chaque jeune touché par l&apos;amour de Dieu, enraciné dans Sa Parole
-              et engagé au service de Son Royaume. Nous croyons en une jeunesse transformée et transformatrice.
+              {t.mission.description}
               </Typography>
             </Stack>
 
             <Grid container spacing={3}>
-            {MISSION_CARDS.map((card, index) => (
+            {t.mission.cards.map((card, index) => {
+              const CardIcon = MISSION_ICONS[index];
+              return { ...card, icon: CardIcon };
+            }).map((card, index) => (
               <Grid size={{ xs: 12, sm: 6, md: 3 }} key={card.title}>
                   <Card
                     component={m.div}
@@ -1141,11 +1076,10 @@ export default function HomePage() {
               variant="h5"
               sx={{ fontWeight: 400, fontStyle: 'italic', mb: 2, position: 'relative', lineHeight: 1.6, maxWidth: 700, mx: 'auto' }}
             >
-              &ldquo;Que personne ne méprise ta jeunesse ; mais sois un modèle pour les fidèles,
-              en parole, en conduite, en amour, en foi, en pureté.&rdquo;
+              {t.mission.bibleVerse}
             </Typography>
             <Typography variant="subtitle1" sx={{ fontWeight: 700, color: theme.palette.secondary.main, position: 'relative' }}>
-              — 1 Timothée 4:12
+              {t.mission.bibleRef}
             </Typography>
           </Box>
         </Container>
@@ -1165,10 +1099,10 @@ export default function HomePage() {
             sx={{ mb: 6, textAlign: 'center', maxWidth: 650, mx: 'auto' }}
                 >
             <Typography variant="overline" sx={{ color: 'primary.main', letterSpacing: 2, fontWeight: 700 }}>
-              Nos activités
+              {t.activities.overline}
                   </Typography>
             <Typography variant="h3" sx={{ fontWeight: 800 }}>
-              Spirituel & sportif, un équilibre pour les jeunes
+              {t.activities.title}
                   </Typography>
                 </Stack>
 
@@ -1179,10 +1113,13 @@ export default function HomePage() {
             variant="h5"
             sx={{ fontWeight: 700, mb: 3, display: 'flex', alignItems: 'center', gap: 1 }}
           >
-            <MenuBook sx={{ color: 'primary.main' }} /> Activités spirituelles
+            <MenuBook sx={{ color: 'primary.main' }} /> {t.activities.spiritualTitle}
           </Typography>
           <Grid container spacing={3} sx={{ mb: 8 }}>
-            {ACTIVITY_SPIRITUAL.map((act, index) => (
+            {t.activities.spiritual.map((act, index) => {
+              const ActIcon = SPIRITUAL_ICONS[index];
+              return { ...act, icon: ActIcon };
+            }).map((act, index) => (
               <Grid size={{ xs: 12, md: 4 }} key={act.title}>
                       <Card
                         component={m.div}
@@ -1238,10 +1175,14 @@ export default function HomePage() {
             variant="h5"
             sx={{ fontWeight: 700, mb: 3, display: 'flex', alignItems: 'center', gap: 1 }}
           >
-            <EmojiEvents sx={{ color: 'primary.main' }} /> Activités sportives
+            <EmojiEvents sx={{ color: 'primary.main' }} /> {t.activities.sportTitle}
           </Typography>
           <Grid container spacing={3}>
-            {ACTIVITY_SPORT.map((sport, index) => (
+            {t.activities.sport.map((sport, index) => ({
+              ...sport,
+              icon: SPORT_META[index].icon,
+              color: SPORT_META[index].color,
+            })).map((sport, index) => (
               <Grid size={{ xs: 12, md: 6 }} key={sport.title}>
                 <Card
                   component={m.div}
@@ -1313,19 +1254,21 @@ export default function HomePage() {
             sx={{ mb: 6, textAlign: 'center', maxWidth: 680, mx: 'auto' }}
             >
             <Typography variant="overline" sx={{ color: 'primary.main', letterSpacing: 2, fontWeight: 700 }}>
-              Nos camps
+              {t.camps.overline}
               </Typography>
             <Typography variant="h3" sx={{ fontWeight: 800 }}>
-              Des moments inoubliables d&apos;édification
+              {t.camps.title}
             </Typography>
             <Typography variant="body1" sx={{ color: 'text.secondary', fontSize: '1.05rem' }}>
-              Nos camps sont des temps forts où les jeunes vivent une expérience unique de croissance
-              spirituelle, de fraternité et de joie dans un cadre exceptionnel.
+              {t.camps.description}
               </Typography>
             </Stack>
 
           <Grid container spacing={4}>
-            {CAMPS_DATA.map((camp, index) => (
+            {t.camps.items.map((camp, index) => ({
+              ...camp,
+              icon: CAMP_ICONS[index],
+            })).map((camp, index) => (
               <Grid size={{ xs: 12, md: 4 }} key={camp.title}>
                 <Card
                     component={m.div}
@@ -1412,18 +1355,18 @@ export default function HomePage() {
             >
             <Typography variant="overline" sx={{ color: 'primary.main', letterSpacing: 2, fontWeight: 700 }}>
               <CollectionsOutlined sx={{ fontSize: 18, verticalAlign: 'middle', mr: 0.5 }} />
-              Galerie photos
+              {t.gallery.overline}
               </Typography>
             <Typography variant="h3" sx={{ fontWeight: 800 }}>
-              Nos moments forts en images
+              {t.gallery.title}
               </Typography>
               <Typography variant="body1" sx={{ color: 'text.secondary' }}>
-              Revivez les temps forts de notre communauté : louanges, camps, matchs et moments de partage.
+              {t.gallery.description}
               </Typography>
             </Stack>
 
           <Grid container spacing={2}>
-            {GALLERY_IMAGES.map((img, index) => (
+            {GALLERY_SRCS.map((src, index) => (
               <Grid size={{ xs: 6, sm: 4, md: 3 }} key={index}>
                 <Box
                   component={m.div}
@@ -1441,8 +1384,8 @@ export default function HomePage() {
                 >
                   <Box
                     component="img"
-                    src={img.src}
-                    alt={img.alt}
+                    src={src}
+                    alt={t.gallery.imageAlts[index] ?? ''}
                     sx={{
                       width: '100%',
                       height: '100%',
@@ -1467,7 +1410,7 @@ export default function HomePage() {
                     }}
                   >
                     <Typography variant="body2" sx={{ color: '#fff', fontWeight: 600 }}>
-                      {img.alt}
+                      {t.gallery.imageAlts[index] ?? ''}
                     </Typography>
                   </Box>
                 </Box>
@@ -1496,14 +1439,13 @@ export default function HomePage() {
               >
                 <Box>
                   <Typography variant="overline" sx={{ color: 'primary.main', letterSpacing: 2, fontWeight: 700 }}>
-                    Contact
+                    {t.contact.overline}
                   </Typography>
                   <Typography variant="h3" sx={{ fontWeight: 800, mt: 1, mb: 1.5 }}>
-                    Rejoignez-nous !
+                    {t.contact.title}
                   </Typography>
                   <Typography variant="body1" sx={{ color: 'text.secondary', lineHeight: 1.7 }}>
-                    Vous souhaitez en savoir plus sur Tanora A LLB, participer à nos activités ou simplement
-                    nous dire bonjour ? N&apos;hésitez pas à nous contacter !
+                    {t.contact.description}
                   </Typography>
                 </Box>
 
@@ -1525,7 +1467,7 @@ export default function HomePage() {
                     </Box>
                     <Box>
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                        Email
+                        {t.contact.email}
             </Typography>
                       <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
                         tanora.a.llb@gmail.com
@@ -1550,7 +1492,7 @@ export default function HomePage() {
                     </Box>
                     <Box>
             <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                        Téléphone
+                        {t.contact.phone}
                       </Typography>
                       <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
                         +261 34 00 000 00
@@ -1575,10 +1517,10 @@ export default function HomePage() {
                     </Box>
                     <Box>
                       <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                        Adresse
+                        {t.contact.address}
                       </Typography>
                       <Typography variant="subtitle2" sx={{ fontWeight: 600 }}>
-                        Antananarivo, Madagascar
+                        {t.contact.addressValue}
                       </Typography>
                     </Box>
                   </Stack>
@@ -1621,20 +1563,20 @@ export default function HomePage() {
                 }}
               >
                 <Typography variant="h5" sx={{ fontWeight: 700, mb: 3 }}>
-                  Envoyez-nous un message
+                  {t.contact.formTitle}
                 </Typography>
                 <Stack spacing={3}>
                   <Grid container spacing={2}>
                     <Grid size={{ xs: 12, sm: 6 }}>
-                      <TextField fullWidth label="Nom" variant="outlined" />
+                      <TextField fullWidth label={t.contact.formName} variant="outlined" />
                     </Grid>
                     <Grid size={{ xs: 12, sm: 6 }}>
-                      <TextField fullWidth label="Prénom" variant="outlined" />
+                      <TextField fullWidth label={t.contact.formFirstName} variant="outlined" />
                     </Grid>
                   </Grid>
-                  <TextField fullWidth label="Email" variant="outlined" type="email" />
-                  <TextField fullWidth label="Sujet" variant="outlined" />
-                  <TextField fullWidth label="Message" variant="outlined" multiline rows={4} />
+                  <TextField fullWidth label={t.contact.formEmail} variant="outlined" type="email" />
+                  <TextField fullWidth label={t.contact.formSubject} variant="outlined" />
+                  <TextField fullWidth label={t.contact.formMessage} variant="outlined" multiline rows={4} />
                   <Button
                     variant="contained"
                     size="large"
@@ -1655,7 +1597,7 @@ export default function HomePage() {
                       transition: 'all 0.25s ease',
                     }}
                   >
-                    Envoyer le message
+                    {t.contact.formSubmit}
                   </Button>
                 </Stack>
               </Card>
@@ -1692,11 +1634,11 @@ export default function HomePage() {
               />
               <LeafletMarker position={[-18.908991, 47.525487]}>
                 <Popup>
-                  <strong>Tanora A LLB</strong>
+                  <strong>{t.contact.mapPopupName}</strong>
                   <br />
-                  Ligue pour la Lecture de la Bible
+                  {t.contact.mapPopupOrg}
                   <br />
-                  Antananarivo, Madagascar
+                  {t.contact.mapPopupCity}
                 </Popup>
               </LeafletMarker>
             </LeafletMap>
@@ -1725,19 +1667,19 @@ export default function HomePage() {
                 />
                 <Box>
                   <Typography variant="subtitle1" sx={{ fontWeight: 700, color: '#fff', lineHeight: 1.3 }}>
-                    Ligue pour la Lecture de la Bible
+                    {t.footer.orgName}
                   </Typography>
                   <Typography variant="caption" sx={{ color: alpha('#fff', 0.5) }}>
-                    Tanora A — Ministère auprès des jeunes
+                    {t.footer.orgSub}
                   </Typography>
                 </Box>
               </Stack>
             </Grid>
             <Grid size={{ xs: 12, md: 4 }}>
               <Typography variant="body2" sx={{ color: alpha('#fff', 0.6), textAlign: { xs: 'left', md: 'center' } }}>
-                &ldquo;Ta parole est une lampe à mes pieds, et une lumière sur mon sentier&rdquo;
+                {t.footer.bibleVerse}
                 <br />
-                <strong style={{ color: '#FFED00' }}>Psaumes 119:105</strong>
+                <strong style={{ color: '#FFED00' }}>{t.footer.bibleRef}</strong>
               </Typography>
             </Grid>
             <Grid size={{ xs: 12, md: 4 }}>
@@ -1745,7 +1687,7 @@ export default function HomePage() {
                 variant="body2"
                 sx={{ color: alpha('#fff', 0.5), textAlign: { xs: 'left', md: 'right' } }}
               >
-                © {new Date().getFullYear()} Tanora A LLB. Tous droits réservés.
+                © {new Date().getFullYear()} {t.footer.copyright}
               </Typography>
             </Grid>
           </Grid>

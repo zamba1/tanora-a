@@ -6,6 +6,7 @@ import InitColorSchemeScript from '@mui/material/InitColorSchemeScript';
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
 
 import { CONFIG } from 'src/global-config';
+import { LanguageProvider } from 'src/locales';
 import { primary } from 'src/theme/core/palette';
 import { themeConfig, ThemeProvider } from 'src/theme';
 
@@ -62,7 +63,7 @@ export const metadata: Metadata = {
         width: 1200,
         height: 630,
         alt: 'Tanora A LLB - Club chrétien pour les jeunes',
-        type: 'image/jpeg',
+        type: 'image/jpg',
       },
     ],
   },
@@ -131,10 +132,12 @@ export default async function RootLayout({ children }: RootLayoutProps) {
                 defaultMode={themeConfig.defaultMode}
               >
                 <MotionLazy>
-                  <GoogleFonts />
-                  <ProgressBar />
-                  <SettingsDrawer defaultSettings={defaultSettings} />
-                  {children}
+                  <LanguageProvider>
+                    <GoogleFonts />
+                    <ProgressBar />
+                    <SettingsDrawer defaultSettings={defaultSettings} />
+                    {children}
+                  </LanguageProvider>
                 </MotionLazy>
               </ThemeProvider>
             </AppRouterCacheProvider>
